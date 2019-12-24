@@ -1,60 +1,45 @@
 package com.hachicore.thejavatest;
 
 import org.junit.jupiter.api.*;
-
-import java.time.Duration;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
 
     @Test
     @DisplayName("스터디 만들기")
+    // @EnabledOnOs({ OS.WINDOWS, OS.MAC })
+    // @EnabledOnJre({ JRE.JAVA_8, JRE.JAVA_9, JRE.JAVA_10, JRE.JAVA_11 })
+    @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "local")
     void create_new_study() {
-        // all();
-        // exception();
-        // timeout();
-        // timeoutPreemptively();
+        String test_env = System.getenv("TEST_ENV");
+        // System.out.println(test_env);
+        // assumeTrue("LOCAL".equalsIgnoreCase(test_env));
+
+/*
+        assumingThat("LOCAL".equalsIgnoreCase(test_env), () -> {
+            Study actual = new Study(10);
+            assertThat(actual.getLimit()).isEqualTo(10);
+        });
+
+        assumingThat("hachicore".equalsIgnoreCase(test_env), () -> {
+            System.out.println("hachicore");
+            Study actual = new Study(10);
+            assertThat(actual.getLimit()).isGreaterThan(0);
+        });
+*/
 
         Study actual = new Study(10);
-        assertThat(actual.getLimit()).isEqualTo(10);
-    }
-
-    private void timeout() {
-        assertTimeout(Duration.ofMillis(100), () -> {
-            new Study(10);
-            Thread.sleep(300);
-        });
-    }
-
-    private void timeoutPreemptively() {
-        assertTimeoutPreemptively(Duration.ofMillis(100), () -> {
-            new Study(10);
-            Thread.sleep(300);
-        });
-    }
-
-    private void all() {
-        Study study = new Study(-10);
-        assertAll(
-                () -> assertNotNull(study),
-                () -> assertEquals(StudyStatus.DRAFT, study.getStatus(),
-                        () -> "스터디를 처음 만들면 상태값이 " + StudyStatus.DRAFT + "여야 한다."),
-                () -> assertTrue(study.getLimit() > 0, "스터디 최대 참석 가능 인원은 0보다 커야 한다")
-        );
-    }
-
-    private void exception() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            new Study(-10);
-        });
-        assertEquals("limit은 0보다 커야한다", exception.getMessage());
+        assertThat(actual.getLimit()).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("스터디 다시 만들기")
+    // @DisabledOnOs(OS.MAC)
+    // @EnabledOnJre(JRE.OTHER)
+    @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "hachicore")
     void create_new_study_again() {
         System.out.println("create1");
     }
