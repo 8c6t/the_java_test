@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StudyTest {
 
@@ -33,6 +32,7 @@ class StudyTest {
     @Order(1)
     @SlowTest
     @DisplayName("스터디 만들기 slow")
+    @Disabled
     void create_new_study_again() {
         System.out.println(this);
         System.out.println("create1 " + value++);
