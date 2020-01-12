@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudyServiceTest {
@@ -41,5 +41,17 @@ class StudyServiceTest {
 
         studyService.createNewStudy(1L, study);
         assertEquals(member, study.getOwner());
+
+        verify(memberService, times(1)).notify(study);
+        // verify(memberService, times(1)).notify(member);
+        // verify(memberService, never()).validate(any());
+
+        // InOrder inOrder = inOrder(memberService);
+        // inOrder.verify(memberService).notify(study);
+        // inOrder.verify(memberService).notify(member);
+
+        verifyNoMoreInteractions(memberService);
+
     }
+
 }
