@@ -12,7 +12,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class StudyServiceTest {
@@ -22,6 +24,7 @@ class StudyServiceTest {
 
     @Test
     void createNewStudy() {
+        // given
         StudyService studyService = new StudyService(memberService, studyRepository);
         assertNotNull(studyService);
 
@@ -33,25 +36,16 @@ class StudyServiceTest {
 
         Study study = new Study(10, "테스트");
 
-        // memberService 객체에 findById 메소드를 1L 값으로 호출하면 Optional.of(member) 객체를 리턴하도록 stubbing
-        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        given(memberService.findById(1L)).willReturn(Optional.of(member));
+        given(studyRepository.save(study)).willReturn(study);
 
-        // studyRepository 객체에 save 메소드를 study 객체로 호출하면 객체 그대로 리턴하도록 stubbing
-        when(studyRepository.save(study)).thenReturn(study);
-
+        // when
         studyService.createNewStudy(1L, study);
+
+        // then
         assertEquals(member, study.getOwner());
-
-        verify(memberService, times(1)).notify(study);
-        // verify(memberService, times(1)).notify(member);
-        // verify(memberService, never()).validate(any());
-
-        // InOrder inOrder = inOrder(memberService);
-        // inOrder.verify(memberService).notify(study);
-        // inOrder.verify(memberService).notify(member);
-
-        verifyNoMoreInteractions(memberService);
-
+        then(memberService).should(times(1)).notify(study);
+        then(memberService).shouldHaveNoInteractions();
     }
 
 }
