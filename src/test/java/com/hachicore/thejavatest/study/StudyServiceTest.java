@@ -10,8 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -46,6 +45,24 @@ class StudyServiceTest {
         assertEquals(member, study.getOwner());
         then(memberService).should(times(1)).notify(study);
         then(memberService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void openStudy() {
+        // given
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        Study study = new Study(10, "더 자바, 테스트");
+        assertNull(study.getOpenedDateTime());
+
+        given(studyRepository.save(study)).willReturn(study);
+
+        // when
+        studyService.openStudy(study);
+
+        // then
+        assertEquals(StudyStatus.OPENED, study.getStatus());
+        assertNotNull(study.getOpenedDateTime());
+        then(memberService).should().notify(study);
     }
 
 }
