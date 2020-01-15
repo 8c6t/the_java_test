@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -15,11 +18,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class StudyServiceTest {
 
     @Mock MemberService memberService;
-    @Mock StudyRepository studyRepository;
+    @Autowired StudyRepository studyRepository;
 
     @Test
     void createNewStudy() {
@@ -36,15 +41,14 @@ class StudyServiceTest {
         Study study = new Study(10, "테스트");
 
         given(memberService.findById(1L)).willReturn(Optional.of(member));
-        given(studyRepository.save(study)).willReturn(study);
 
         // when
         studyService.createNewStudy(1L, study);
 
         // then
-        assertEquals(member, study.getOwner());
+        assertEquals(1L, study.getOwnerId());
         then(memberService).should(times(1)).notify(study);
-        then(memberService).shouldHaveNoInteractions();
+        then(memberService).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -53,8 +57,6 @@ class StudyServiceTest {
         StudyService studyService = new StudyService(memberService, studyRepository);
         Study study = new Study(10, "더 자바, 테스트");
         assertNull(study.getOpenedDateTime());
-
-        given(studyRepository.save(study)).willReturn(study);
 
         // when
         studyService.openStudy(study);
