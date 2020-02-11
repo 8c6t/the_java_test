@@ -3,6 +3,7 @@ package com.hachicore.thejavatest.study;
 import com.hachicore.thejavatest.domain.Member;
 import com.hachicore.thejavatest.domain.Study;
 import com.hachicore.thejavatest.member.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -10,6 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 
@@ -21,10 +25,31 @@ import static org.mockito.Mockito.times;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
+@Testcontainers
 class StudyServiceTest {
 
     @Mock MemberService memberService;
     @Autowired StudyRepository studyRepository;
+
+    @Container
+    static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer()
+            .withDatabaseName("studytest");
+
+    @BeforeEach
+    void beforeEach() {
+        studyRepository.deleteAll();
+    }
+
+//    @BeforeAll
+//    static void beforeAll() {
+//        postgreSQLContainer.start();
+//        // System.out.println(postgreSQLContainer.getJdbcUrl());
+//    }
+//
+//    @AfterAll
+//    static void afterAll() {
+//        postgreSQLContainer.stop();
+//    }
 
     @Test
     void createNewStudy() {
