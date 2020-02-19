@@ -86,6 +86,13 @@
             <artifactId>chaos-monkey-spring-boot</artifactId>
             <version>2.1.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5-engine</artifactId>
+            <version>0.12.0</version>
+            <scope>test</scope>
+        </dependency>
         
     </dependencies>
 
