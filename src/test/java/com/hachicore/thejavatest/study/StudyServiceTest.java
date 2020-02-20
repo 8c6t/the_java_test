@@ -2,6 +2,7 @@ package com.hachicore.thejavatest.study;
 
 import com.hachicore.thejavatest.domain.Member;
 import com.hachicore.thejavatest.domain.Study;
+import com.hachicore.thejavatest.domain.StudyStatus;
 import com.hachicore.thejavatest.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

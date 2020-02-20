@@ -1,6 +1,5 @@
 package com.hachicore.thejavatest.domain;
 
-import com.hachicore.thejavatest.study.StudyStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
